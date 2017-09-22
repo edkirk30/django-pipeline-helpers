@@ -13,12 +13,14 @@ def _add_namespace(namespace, data):
     """
     Add namespace:key to each key in data.
     """
-    # modifying the dict as you iterate over it 
-    # would hit every key multiple times
-    keys = data.keys()  
-    
-    for key in keys:
-        data["%s:%s" % (namespace, key)] = data.pop(key)
+
+    new_data = {}
+
+    for key in data.keys():
+        new_data["%s:%s" % (namespace, key)] = data[key]
+
+    print(new_data)
+    return new_data
 
 def _assets_from_apps():
     """
@@ -31,10 +33,12 @@ def _assets_from_apps():
             assets = importlib.import_module("%s.assets"% app)
             js = getattr(assets, "PIPELINE_JS", {})
             css = getattr(assets, "PIPELINE_CSS", {})
-            _add_namespace(app, js)
-            _add_namespace(app, css)
-            _js.update(getattr(assets, "PIPELINE_JS", {}))
-            _css.update(getattr(assets, "PIPELINE_CSS", {}))
+
+            js = _add_namespace(app, js)
+            css = _add_namespace(app, css)
+
+            _js.update(js)
+            _css.update(css)
         except ImportError:
             continue
 
