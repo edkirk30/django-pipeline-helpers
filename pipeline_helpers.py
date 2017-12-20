@@ -19,7 +19,6 @@ def _add_namespace(namespace, data):
     for key in data.keys():
         new_data["%s:%s" % (namespace, key)] = data[key]
 
-    print(new_data)
     return new_data
 
 def _assets_from_apps():
